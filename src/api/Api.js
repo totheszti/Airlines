@@ -25,7 +25,7 @@ export default class Api {
 
     static updateCity(params) {
         debugger
-        const url = BASE_URL +'/city/';
+        const url = BASE_URL +'/city/' + params.id;
         return axios.put(url, params)
     }
 

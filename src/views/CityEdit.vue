@@ -8,6 +8,7 @@
         </div>
 
         <b-container fluid class="text-right">
+            <form @submit="checkForm">
             <b-row class="my-1">
                 <b-col sm="1" class="mt-3">
                     <label for="name" class="custom-required font-weight-bold">Név:</label>
@@ -26,7 +27,14 @@
                 </b-col>
             </b-row>
 
+                <div v-if="errors.length" class="rounded border border-danger w-30 m-3 p-3">
+                    <b>Kérlek javítsd ki a hibá(ka)t:</b>
+                    <ul>
+                        <li v-for="error in errors" :key="error">{{ error }}</li>
+                    </ul>
+                </div>
 
+            </form>
             <b-row class="my-1">
                 <b-col sm="1" class="my-5 mr-3">
                     <router-link to="/city" class="text-decoration-none">
@@ -38,14 +46,6 @@
                 </b-col>
             </b-row>
         </b-container>
-
-
-        <div v-if="errors.length" class="rounded border border-danger w-30 m-3 p-3">
-            <b>Please correct the following error(s):</b>
-            <ul>
-                <li v-for="error in errors" :key="error">{{ error }}</li>
-            </ul>
-        </div>
     </div>
 </template>
 
@@ -67,8 +67,15 @@
             }
         },
         methods: {
+            checkForm: function (e) {
+                if (this.city.name && this.city.population) return true;
+                this.errors = [];
+                if (!this.city.name) this.errors.push("Név megadása kötelező.");
+                if (!this.city.population) this.errors.push("Lakosság megadása kötelező.");
+                e.preventDefault();
+            },
+
             saveCity(data) {
-                debugger
                 if (data.id !== undefined) {
                     Api.updateCity(data)
                         .then(response => {
@@ -81,6 +88,14 @@
                                 });
 
                             }
+                            else {
+                                this.$toast.open({
+                                    message: "Módosítás sikertelen",
+                                    type: "error",
+                                    duration: 5000,
+                                    dismissible: true
+                                });
+                            }
                         });
                 } else {
                     Api.saveCity(data).then(response => {
@@ -92,6 +107,14 @@
                                 dismissible: true
                             });
 
+                        }
+                        else {
+                            this.$toast.open({
+                                message: "Mentés sikertelen",
+                                type: "error",
+                                duration: 5000,
+                                dismissible: true
+                            });
                         }
                     });
                 }
