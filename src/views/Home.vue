@@ -16,7 +16,7 @@
             <router-link to="/flight" class="text-decoration-none">
             <b-button variant="secondary"
                       size="md" class="py-3 mx-1">
-                Járatok
+                Repülőjáratok
             </b-button>
             </router-link>
         </div>

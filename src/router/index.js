@@ -30,6 +30,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "airlineEdit" */ '../views/AirlineEdit')
     },
     {
+        path: '/flight',
+        name: 'Flight',
+        component: () => import(/* webpackChunkName: "airline" */ '../views/Flight')
+    },
+    {
+        path: '/flight/edit',
+        name: 'flightEdit',
+        component: () => import(/* webpackChunkName: "airlineEdit" */ '../views/FlightEdit')
+    },
+    {
         path: '*',
         name: 'NotFound',
         component: () => import(/* webpackChunkName: "notFound" */ '../views/NotFound')

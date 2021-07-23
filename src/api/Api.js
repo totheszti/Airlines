@@ -68,4 +68,35 @@ export default class Api {
 
     /*LÉGITÁRSASÁGOK*/
 
+    /*JÁRATOK*/
+
+    static getAllFlight() {
+        const url = BASE_URL + '/flight';
+        return axios.get(url)
+    }
+
+    static findFlightById(id){
+        const url = BASE_URL +'/flight/' +id;
+        return axios.get(url);
+    }
+
+    static saveFlight(airline) {
+        debugger
+        const url = BASE_URL +'/flight';
+        return axios.post(url, airline)
+    }
+
+    static updateFlight(params) {
+        debugger
+        const url = BASE_URL +'/flight/' + params.id;
+        return axios.put(url, params)
+    }
+
+    static deleteFlight(id) {
+        const url = BASE_URL +'/flight/' +id;
+        return axios.delete(url)
+    }
+
+    /*JÁRATOK*/
+
 }

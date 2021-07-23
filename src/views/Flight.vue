@@ -2,16 +2,20 @@
     <div>
         <div class="container mx-auto h-auto">
             <div>
-            <router-link v-b-tooltip.hover title="Vissza" to="/">
-                <b-icon icon="arrow-left-circle-fill" class="mt-5 mx-auto backColor backSvg"></b-icon>
-            </router-link>
+                <router-link v-b-tooltip.hover title="Vissza" to="/">
+                    <b-icon icon="arrow-left-circle-fill" class="mt-5 mx-auto backColor backSvg"></b-icon>
+                </router-link>
             </div>
-            <h1 class="mb-5 mt-5">Légitársaságok</h1>
+            <h1 class="mb-5 mt-5">Repülőjáratok</h1>
             <div class="w-100">
                 <div class="p-0 my-3 justify-content-end">
                     <router-link to="/airline/edit" class="text-decoration-none">
-                        <b-button block type="submit" variant="success" class="btn-new"><b-icon icon="plus" class="mr-2"/>Új légitársaság hozzáadása</b-button>
-                    </router-link></div>
+                        <b-button block type="submit" variant="success" class="btn-new">
+                            <b-icon icon="plus" class="mr-2"/>
+                            Új járat hozzáadása
+                        </b-button>
+                    </router-link>
+                </div>
             </div>
             <b-table striped responsive="sm"
                      id="my-table"
@@ -22,21 +26,23 @@
                      class="text-center"
             >
                 <template v-slot:cell(actions)="row">
-                    <router-link :to="{name:'airlineEdit', params:{id:row.item.id}}">
+                    <router-link :to="{name:'flightEdit', params:{id:row.item.id}}">
                         <b-button v-b-tooltip.hover title="Szerkesztés" variant="primary" size="sm"
                                   class="mx-2 mb-2">
                             <b-icon icon="pencil"></b-icon>
                         </b-button>
                     </router-link>
 
-                    <b-button v-b-tooltip.hover title="Törlés" variant="danger" class="mb-2" size="sm" @click="open(row.item.id)">
+                    <b-button v-b-tooltip.hover title="Törlés" variant="danger" class="mb-2" size="sm"
+                              @click="open(row.item.id)">
                         <b-icon icon="trash" aria-hidden="true"></b-icon>
                     </b-button>
 
-                    <sweet-modal ref="modal" title="Biztos, hogy törölni szeretnéd a légitársaságot?" class="my-auto">
+                    <sweet-modal ref="modal" title="Biztos, hogy törölni szeretnéd a járatot?" class="my-auto">
                         A törölt elemet nem lehet visszaállítani!
                         <b-button class="mr-2">Mégse</b-button>
-                        <b-button variant="danger" @click="deleteAirline(deleteId)">Törlés</b-button></sweet-modal>
+                        <b-button variant="danger" @click="deleteFlight(deleteId)">Törlés</b-button>
+                    </sweet-modal>
 
                 </template>
             </b-table>
@@ -58,7 +64,7 @@
     import {SweetModal} from 'sweet-modal-vue';
 
     export default {
-        name: "Airline",
+        name: "Flight",
         components: {
             SweetModal
         },
@@ -67,7 +73,9 @@
                 deleteId: '',
                 perPage: 5,
                 currentPage: 1,
-                fields: [{key: 'name', label: 'Város neve', sortable: true},
+                fields: [{key: 'airline', label: 'Légitársaság', sortable: true},
+                    {key: 'from', label: 'Honnan?', sortable: true},
+                    {key: 'to', label: 'Hova?', sortable: true},
                     {key: 'actions', label: 'Műveletek'},
                 ],
                 dataArrays: [],
@@ -92,12 +100,14 @@
         },
         methods: {
             getAllItems() {
-                Api.getAllAirline().then(resp => {
+                Api.getAllFlight().then(resp => {
                     for (let i = 0; i < resp.data.length; i++) {
-                        this.dataArrays.push({
-                            id: resp.data[i].id,
-                            name: resp.data[i].name,
-                        });
+                            this.dataArrays.push({
+                                id: resp.data[i].id,
+                                airline: resp.data[i].airline.name,
+                                from: resp.data[i].from.name,
+                                to: resp.data[i].to.name,
+                            });
                     }
 
                 });
@@ -106,9 +116,9 @@
                 this.deleteId = id;
                 this.$refs.modal.open()
             },
-            deleteAirline(id) {
-                Api.deleteAirline(id).then((response) => {
-                    if (response.status === 200){
+            deleteFlight(id) {
+                Api.deleteFlight(id).then((response) => {
+                    if (response.status === 200) {
                         this.$toast.open({
                             message: "Sikeres törlés",
                             type: "success",
