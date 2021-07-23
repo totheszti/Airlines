@@ -1,18 +1,22 @@
 <template>
     <div>
         <div class="container mx-auto h-auto">
-            <h1 class="mb-5 mt-5">Repülőtársaságok</h1>
+            <div>
+            <router-link v-b-tooltip.hover title="Vissza" to="/">
+                <b-icon icon="arrow-left-circle-fill" class="mt-5 mx-auto backColor backSvg"></b-icon>
+            </router-link>
+            </div>
+            <h1 class="mb-5 mt-5">Légitársaságok</h1>
             <div class="w-100">
                 <div class="p-0 my-3 justify-content-end">
                     <router-link to="/airline/edit" class="text-decoration-none">
-                        <b-button block type="submit" variant="success" class="btn-new"><b-icon icon="plus" class="mr-2"/>Új repülőtársaság hozzáadása</b-button>
+                        <b-button block type="submit" variant="success" class="btn-new"><b-icon icon="plus" class="mr-2"/>Új légitársaság hozzáadása</b-button>
                     </router-link></div>
             </div>
             <b-table striped responsive="sm"
                      id="my-table"
                      :items="items"
                      :fields="fields"
-                     :keyword="keyword"
                      :per-page="perPage"
                      :current-page="currentPage"
                      class="text-center"
@@ -98,11 +102,6 @@
 
                 });
             },
-            info(item, index, button) {
-                this.infoModal.title = `Row index: ${index}`;
-                this.infoModal.content = JSON.stringify(item, null, 2);
-                this.$root.$emit('bv::show::modal', this.infoModal.id, button)
-            },
             open(id) {
                 this.deleteId = id;
                 this.$refs.modal.open()
@@ -139,4 +138,19 @@
 </script>
 
 <style scoped>
+
+    .backColor {
+        color: dodgerblue;
+    }
+
+    .backSvg {
+        min-width: 50px;
+        min-height: 50px;
+    }
+
+    svg :hover {
+        color: #ffd718;
+        box-shadow: 3px 0px 0px 0px #000000 inset !important;
+    }
+
 </style>

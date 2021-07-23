@@ -1,10 +1,10 @@
 <template>
     <div class="container mx-auto">
         <div class="d-flex">
-            <router-link v-b-tooltip.hover title="Vissza" to="/airline">
+            <router-link v-b-tooltip.hover title="Vissza" to="/city">
                 <b-icon icon="arrow-left-circle-fill" class="mt-5 mx-auto backColor"></b-icon>
             </router-link>
-            <h1 class="mb-5 mt-5 mx-2 col-9">Légitársaság hozzáadása</h1>
+            <h1 class="mb-5 mt-5 mx-2 col-9">Város hozzáadása</h1>
         </div>
 
         <b-container fluid class="text-right">
@@ -13,18 +13,28 @@
                     <label for="name" class="custom-required font-weight-bold">Név:</label>
                 </b-col>
                 <b-col sm="4" class="my-2">
-                    <b-form-input name="name" id="name" v-model="airline.name"></b-form-input>
+                    <b-form-input name="name" id="name" v-model="city.name"></b-form-input>
                 </b-col>
             </b-row>
 
             <b-row class="my-1">
+                <b-col sm="1" class="mt-3">
+                    <label for="population" class="custom-required font-weight-bold">Lakosság:</label>
+                </b-col>
+                <b-col sm="4" class="my-2">
+                    <b-form-input type="number" name="population" id="population" v-model="city.population"></b-form-input>
+                </b-col>
+            </b-row>
+
+
+            <b-row class="my-1">
                 <b-col sm="1" class="my-5 mr-3">
-                    <router-link to="/airline" class="text-decoration-none">
+                    <router-link to="/city" class="text-decoration-none">
                         <b-button block type="cancel">Mégse</b-button>
                     </router-link>
                 </b-col>
                 <b-col sm="1" class="my-5">
-                    <b-button block variant="success" type="submit" @click="saveAirline(airline)">Mentés</b-button>
+                    <b-button block variant="success" type="submit" @click="saveCity(city)">Mentés</b-button>
                 </b-col>
             </b-row>
         </b-container>
@@ -43,36 +53,37 @@
     import Api from "../api/Api";
 
     export default {
-        name: "AirlineEdit",
+        name: "CityEdit",
         data() {
             return {
                 selected: null,
                 teamSelect: [],
                 errors: [],
-                airline: {
+                city: {
                     id: '',
-                    name: ''
+                    name: '',
+                    population: null
                 }
             }
         },
         methods: {
-            saveAirline(data) {
+            saveCity(data) {
                 debugger
                 if (data.id !== undefined) {
-                    Api.updateAirline(data)
+                    Api.updateCity(data)
                         .then(response => {
-                        if (response.status === 200) {
-                            this.$toast.open({
-                                message: "Sikeres módosítás",
-                                type: "success",
-                                duration: 5000,
-                                dismissible: true
-                            });
+                            if (response.status === 200) {
+                                this.$toast.open({
+                                    message: "Sikeres módosítás",
+                                    type: "success",
+                                    duration: 5000,
+                                    dismissible: true
+                                });
 
-                        }
-                    });
+                            }
+                        });
                 } else {
-                    Api.saveAirline(data).then(response => {
+                    Api.saveCity(data).then(response => {
                         if (response.status === 200) {
                             this.$toast.open({
                                 message: "Sikeres mentés",
@@ -86,9 +97,10 @@
                 }
             },
             findById(id) {
-                Api.findAirlineById(id).then(resp => {
-                    this.airline.id = resp.data.id;
-                    this.airline.name = resp.data.name
+                Api.findCityById(id).then(resp => {
+                    this.city.id = resp.data.id;
+                    this.city.name = resp.data.name;
+                    this.city.population = resp.data.population
                 });
             }
         },

@@ -12,6 +12,29 @@ export default class Api {
         return axios.get(url)
     }
 
+    static findCityById(id){
+        const url = BASE_URL +'/city/' +id;
+        return axios.get(url);
+    }
+
+    static saveCity(airline) {
+        debugger
+        const url = BASE_URL +'/city';
+        return axios.post(url, airline)
+    }
+
+    static updateCity(params) {
+        debugger
+        const url = BASE_URL +'/city/';
+        return axios.put(url, params)
+    }
+
+    static deleteCity(id) {
+        const url = BASE_URL +'/city/' +id;
+        return axios.delete(url)
+    }
+
+
     /*VÁROSOK*/
 
     /*LÉGITÁRSASÁGOK*/
@@ -26,15 +49,16 @@ export default class Api {
         return axios.get(url);
     }
 
-
     static saveAirline(airline) {
+        debugger
         const url = BASE_URL +'/airline';
         return axios.post(url, airline)
     }
 
-    static updateAirline(airline) {
-        const url = BASE_URL +'/airline';
-        return axios.put(url, airline)
+    static updateAirline(params) {
+        debugger
+        const url = BASE_URL +'/airline/' + params.id;
+        return axios.put(url, params)
     }
 
     static deleteAirline(id) {

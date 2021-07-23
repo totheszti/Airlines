@@ -15,6 +15,7 @@
     "sweet-modal-vue": "^2.0.0",
     "vue": "^2.6.11",
     "vue-router": "^3.5.2",
+    "vue-toast-notification": "^0.6.2",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {

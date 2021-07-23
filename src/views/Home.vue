@@ -10,7 +10,7 @@
             <router-link to="/airline" class="text-decoration-none">
             <b-button variant="secondary"
                       size="md" class="py-3 mx-1">
-                Repülőtársaságok
+                Légitársaságok
             </b-button>
             </router-link>
             <router-link to="/flight" class="text-decoration-none">
@@ -32,7 +32,6 @@
                      id="my-table"
                      :items="items"
                      :fields="fields"
-                     :keyword="keyword"
                      :per-page="perPage"
                      :current-page="currentPage"
                      class="text-center"
@@ -72,7 +71,6 @@
         data() {
             return {
                 testNumber: 3,
-                keyword: '',
                 perPage: 5,
                 currentPage: 1,
                 fields: [{key: 'name', label: 'Város neve', sortable: true},
@@ -111,11 +109,6 @@
                     }
 
                 });
-            },
-            info(item, index, button) {
-                this.infoModal.title = `Row index: ${index}`;
-                this.infoModal.content = JSON.stringify(item, null, 2);
-                this.$root.$emit('bv::show::modal', this.infoModal.id, button)
             }
         },
         created() {

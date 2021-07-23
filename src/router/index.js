@@ -7,18 +7,29 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "login" */ '../views/Home')
+        component: () => import(/* webpackChunkName: "home" */ '../views/Home')
+    },
+    {
+        path: '/city',
+        name: 'City',
+        component: () => import(/* webpackChunkName: "city" */ '../views/Home')
+    },
+    {
+        path: '/city/edit',
+        name: 'cityEdit',
+        component: () => import(/* webpackChunkName: "cityEdit" */ '../views/CityEdit')
     },
     {
         path: '/airline',
         name: 'Airline',
-        component: () => import(/* webpackChunkName: "login" */ '../views/Airline')
+        component: () => import(/* webpackChunkName: "airline" */ '../views/Airline')
     },
     {
         path: '/airline/edit',
         name: 'airlineEdit',
-        component: () => import(/* webpackChunkName: "login" */ '../views/AirlineEdit')
-    },    {
+        component: () => import(/* webpackChunkName: "airlineEdit" */ '../views/AirlineEdit')
+    },
+    {
         path: '*',
         name: 'NotFound',
         component: () => import(/* webpackChunkName: "notFound" */ '../views/NotFound')
