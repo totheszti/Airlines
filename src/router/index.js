@@ -32,12 +32,12 @@ const routes = [
     {
         path: '/flight',
         name: 'Flight',
-        component: () => import(/* webpackChunkName: "airline" */ '../views/Flight')
+        component: () => import(/* webpackChunkName: "flight" */ '../views/Flight')
     },
     {
         path: '/flight/edit',
         name: 'flightEdit',
-        component: () => import(/* webpackChunkName: "airlineEdit" */ '../views/FlightEdit')
+        component: () => import(/* webpackChunkName: "flightEdit" */ '../views/FlightEdit')
     },
     {
         path: '*',

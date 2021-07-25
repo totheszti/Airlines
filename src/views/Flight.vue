@@ -9,7 +9,7 @@
             <h1 class="mb-5 mt-5">Repülőjáratok</h1>
             <div class="w-100">
                 <div class="p-0 my-3 justify-content-end">
-                    <router-link to="/airline/edit" class="text-decoration-none">
+                    <router-link to="/flight/edit" class="text-decoration-none">
                         <b-button block type="submit" variant="success" class="btn-new">
                             <b-icon icon="plus" class="mr-2"/>
                             Új járat hozzáadása
@@ -40,7 +40,7 @@
 
                     <sweet-modal ref="modal" title="Biztos, hogy törölni szeretnéd a járatot?" class="my-auto">
                         A törölt elemet nem lehet visszaállítani!
-                        <b-button class="mr-2">Mégse</b-button>
+                        <b-button class="mr-2" @close="close(row.item.id)">Mégse</b-button>
                         <b-button variant="danger" @click="deleteFlight(deleteId)">Törlés</b-button>
                     </sweet-modal>
 
@@ -52,6 +52,7 @@
                     v-model="currentPage"
                     :total-rows="rows"
                     :per-page="perPage"
+                    aria-controls="my-table"
                     class="justify-content-center"
             ></b-pagination>
 
@@ -76,6 +77,8 @@
                 fields: [{key: 'airline', label: 'Légitársaság', sortable: true},
                     {key: 'from', label: 'Honnan?', sortable: true},
                     {key: 'to', label: 'Hova?', sortable: true},
+                    {key: 'distance', label: 'Távolság', sortable: true},
+                    {key: 'duration', label: 'Időtartam', sortable: true},
                     {key: 'actions', label: 'Műveletek'},
                 ],
                 dataArrays: [],
@@ -83,7 +86,6 @@
                     stripe: true,
                     border: true,
                     header: 'row',
-                    enableSearch: true,
                     sort: []
 
                 }
@@ -107,6 +109,8 @@
                                 airline: resp.data[i].airline.name,
                                 from: resp.data[i].from.name,
                                 to: resp.data[i].to.name,
+                                distance: resp.data[i].distance,
+                                duration: resp.data[i].duration,
                             });
                     }
 

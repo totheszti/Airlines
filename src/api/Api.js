@@ -13,7 +13,7 @@ export default class Api {
     }
 
     static findCityById(id){
-        const url = BASE_URL +'/city/' +id;
+        const url = BASE_URL +'/city/' + id;
         return axios.get(url);
     }
 
@@ -50,13 +50,11 @@ export default class Api {
     }
 
     static saveAirline(airline) {
-        debugger
         const url = BASE_URL +'/airline';
         return axios.post(url, airline)
     }
 
     static updateAirline(params) {
-        debugger
         const url = BASE_URL +'/airline/' + params.id;
         return axios.put(url, params)
     }
@@ -80,14 +78,12 @@ export default class Api {
         return axios.get(url);
     }
 
-    static saveFlight(airline) {
-        debugger
+    static saveFlight(flight) {
         const url = BASE_URL +'/flight';
-        return axios.post(url, airline)
+        return axios.post(url, flight)
     }
 
     static updateFlight(params) {
-        debugger
         const url = BASE_URL +'/flight/' + params.id;
         return axios.put(url, params)
     }

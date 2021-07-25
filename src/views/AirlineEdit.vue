@@ -57,7 +57,6 @@
         },
         methods: {
             saveAirline(data) {
-                debugger
                 if (data.id !== undefined) {
                     Api.updateAirline(data)
                         .then(response => {

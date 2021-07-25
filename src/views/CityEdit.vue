@@ -76,6 +76,9 @@
             },
 
             saveCity(data) {
+
+                data.population = parseInt(this.city.population);
+
                 if (data.id !== undefined) {
                     Api.updateCity(data)
                         .then(response => {

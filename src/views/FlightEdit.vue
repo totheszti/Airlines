@@ -13,7 +13,7 @@
                     <label for="airline" class="custom-required font-weight-bold">Légitársaság:</label>
                 </b-col>
                 <b-col sm="4" class="my-2">
-                    <b-form-input name="airline" id="airline" v-model="flight.airline"></b-form-input>
+                    <b-form-select name="airline" id="airline" v-model="flight.airline" :options="airlineSelect"></b-form-select>
                 </b-col>
             </b-row>
 
@@ -22,7 +22,7 @@
                     <label for="from" class="custom-required font-weight-bold">Honnan?:</label>
                 </b-col>
                 <b-col sm="4" class="my-2">
-                    <b-form-input name="from" id="from" v-model="flight.from"></b-form-input>
+                    <b-form-select name="from" id="from" v-model="flight.from" :options="citySelect"></b-form-select>
                 </b-col>
             </b-row>
 
@@ -31,7 +31,25 @@
                     <label for="to" class="custom-required font-weight-bold">Hova?:</label>
                 </b-col>
                 <b-col sm="4" class="my-2">
-                    <b-form-input name="to" id="to" v-model="flight.to"></b-form-input>
+                    <b-form-select name="to" id="to" v-model="flight.to" :options="citySelect"></b-form-select>
+                </b-col>
+            </b-row>
+
+            <b-row class="my-1">
+                <b-col sm="1" class="mt-3">
+                    <label for="distance" class="custom-required font-weight-bold">Távolság:</label>
+                </b-col>
+                <b-col sm="4" class="my-2">
+                    <b-form-input type="number" name="distance" id="distance" v-model="flight.distance"></b-form-input>
+                </b-col>
+            </b-row>
+
+            <b-row class="my-1">
+                <b-col sm="1" class="mt-3">
+                    <label for="duration" class="custom-required font-weight-bold">Időtartam:</label>
+                </b-col>
+                <b-col sm="4" class="my-2">
+                    <b-form-input type="number" name="duration" id="duration" v-model="flight.duration"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -42,7 +60,7 @@
                     </router-link>
                 </b-col>
                 <b-col sm="1" class="my-5">
-                    <b-button block variant="success" type="submit" @click="saveAirline(airline)">Mentés</b-button>
+                    <b-button block variant="success" type="submit" @click="saveFlight(flight)">Mentés</b-button>
                 </b-col>
             </b-row>
         </b-container>
@@ -61,23 +79,42 @@
     import Api from "../api/Api";
 
     export default {
-        name: "AirlineEdit",
+        name: "FlightEdit",
         data() {
             return {
                 selected: null,
-                teamSelect: [],
                 errors: [],
-                airline: {
+                flight: {
                     id: '',
-                    name: ''
-                }
+                    airline: '',
+                    from: '',
+                    to: '',
+                    distance: null,
+                    duration: null
+                },
+                airlineSelect: [],
+                citySelect: [],
             }
         },
         methods: {
-            saveAirline(data) {
-                debugger
-                if (data.id !== undefined) {
-                    Api.updateAirline(data)
+            saveFlight(data) {
+                data.distance = parseInt(this.flight.distance);
+                data.duration = parseInt(this.flight.duration);
+
+                if (data.id === "" || data.id === undefined) {
+                    Api.saveFlight(data).then(response => {
+                        if (response.status === 200) {
+                            this.$toast.open({
+                                message: "Sikeres mentés",
+                                type: "success",
+                                duration: 5000,
+                                dismissible: true
+                            });
+
+                        }
+                    });
+                } else {
+                    Api.updateFlight(data)
                         .then(response => {
                             if (response.status === 200) {
                                 this.$toast.open({
@@ -89,24 +126,41 @@
 
                             }
                         });
-                } else {
-                    Api.saveAirline(data).then(response => {
-                        if (response.status === 200) {
-                            this.$toast.open({
-                                message: "Sikeres mentés",
-                                type: "success",
-                                duration: 5000,
-                                dismissible: true
-                            });
-
-                        }
-                    });
                 }
             },
+            getAllAirlineAndCityOption() {
+                Api.getAllAirline().then(resp => {
+                    for (let i = 0; i < resp.data.length; i++) {
+                        this.airlineSelect.push({
+                            text: resp.data[i].name,
+                            value: {
+                                id: resp.data[i].id,
+                                name: resp.data[i].name
+                            }
+                        });
+                    }
+                });
+                Api.getAllCity().then(resp => {
+                    for (let i = 0; i < resp.data.length; i++) {
+                        this.citySelect.push({
+                            text: resp.data[i].name,
+                            value: {
+                                id: resp.data[i].id,
+                                name: resp.data[i].name,
+                                population: resp.data[i].population
+                            }
+                        });
+                    }
+                });
+            },
             findById(id) {
-                Api.findAirlineById(id).then(resp => {
-                    this.airline.id = resp.data.id;
-                    this.airline.name = resp.data.name
+                Api.findFlightById(id).then(resp => {
+                    this.flight.id = resp.data.id;
+                    this.flight.airline = resp.data.airline;
+                    this.flight.from = resp.data.from;
+                    this.flight.to = resp.data.to;
+                    this.flight.distance = resp.data.distance;
+                    this.flight.duration = resp.data.duration;
                 });
             }
         },
@@ -114,6 +168,7 @@
             if (this.$route.params.id !== null) {
                 this.findById(this.$route.params.id);
             }
+            this.getAllAirlineAndCityOption();
         }
     }
 </script>

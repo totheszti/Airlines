@@ -44,9 +44,14 @@
                         </b-button>
                     </router-link>
 
-                    <b-button v-b-tooltip.hover title="Törlés" variant="danger" class="mb-2" size="sm" v-model="row.detailsShowing">
+                    <b-button v-b-tooltip.hover title="Törlés" variant="danger" class="mb-2" size="sm" @click="deleteCity(row.item.id)">
                         <b-icon icon="trash" aria-hidden="true"></b-icon>
                     </b-button>
+                    <sweet-modal ref="modal" title="Biztos, hogy törölni szeretnéd a várost?" class="my-auto">
+                        A törölt elemet nem lehet visszaállítani!
+                        <b-button class="mr-2" @click="closeModal(row.item.id)">Mégse</b-button>
+                        <b-button variant="danger" @click="deleteCity(deleteId)">Törlés</b-button></sweet-modal>
+
                 </template>
             </b-table>
 
@@ -55,6 +60,7 @@
                     v-model="currentPage"
                     :total-rows="rows"
                     :per-page="perPage"
+                    aria-controls="my-table"
                     class="justify-content-center"
             ></b-pagination>
 
@@ -64,12 +70,16 @@
 
 <script>
     import Api from "../api/Api";
+    import {SweetModal} from 'sweet-modal-vue';
 
     export default {
         name: "Home",
-        components: {},
+        components: {
+            SweetModal
+        },
         data() {
             return {
+                deleteId: '',
                 testNumber: 3,
                 perPage: 5,
                 currentPage: 1,
@@ -109,7 +119,39 @@
                     }
 
                 });
-            }
+            },
+            open(id) {
+                this.deleteId = id;
+                this.$refs.modal.open()
+            },
+            closeModal(id){
+                this.deleteId = id;
+                this.$refs.modal.close()
+            },
+            deleteCity(id) {
+                Api.deleteCity(id).then((response) => {
+                    if (response.status === 200){
+                        this.$toast.open({
+                            message: "Sikeres törlés",
+                            type: "success",
+                            duration: 5000,
+                            dismissible: true
+                        });
+                        this.getAllItems();
+                    } else {
+                        this.$toast.open({
+                            message: "Sikertelen törlés",
+                            type: "error",
+                            duration: 5000,
+                            dismissible: true
+                        });
+                        this.getAllItems();
+                    }
+                });
+                this.$refs.modal.close();
+                this.getAllItems();
+                // window.location.reload()
+            },
         },
         created() {
             this.getAllItems();
