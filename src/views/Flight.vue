@@ -1,10 +1,30 @@
 <template>
     <div>
         <div class="container mx-auto h-auto">
-            <div>
+            <div class="d-flex">
                 <router-link v-b-tooltip.hover title="Vissza" to="/">
                     <b-icon icon="arrow-left-circle-fill" class="mt-5 mx-auto backColor backSvg"></b-icon>
                 </router-link>
+                <div class="m-5 w-100 mx-auto d-flex justify-content-center">
+                    <router-link to="/city" class="text-decoration-none">
+                        <b-button variant="secondary"
+                                  size="md" class="py-3 mx-1">
+                            Városok
+                        </b-button>
+                    </router-link>
+                    <router-link to="/airline" class="text-decoration-none">
+                        <b-button variant="secondary"
+                                  size="md" class="py-3 mx-1">
+                            Légitársaságok
+                        </b-button>
+                    </router-link>
+                    <router-link to="/flight/shortest" class="text-decoration-none">
+                        <b-button variant="secondary"
+                                  size="md" class="py-3 mx-1">
+                            Útvonaltervezés
+                        </b-button>
+                    </router-link>
+                </div>
             </div>
             <h1 class="mb-5 mt-5">Repülőjáratok</h1>
             <div class="w-100">
@@ -47,11 +67,13 @@
                 </template>
             </b-table>
 
+            <b-form-select v-model="selectedPerPage" :options="perPage"></b-form-select>
+
             <b-pagination
                     id="pagination"
                     v-model="currentPage"
                     :total-rows="rows"
-                    :per-page="perPage"
+                    :per-page="selectedPerPage"
                     aria-controls="my-table"
                     class="justify-content-center"
             ></b-pagination>
@@ -71,8 +93,9 @@
         },
         data() {
             return {
+                selectedPerPage: null,
                 deleteId: '',
-                perPage: 5,
+                perPage: [5, 10, 20],
                 currentPage: 1,
                 fields: [{key: 'airline', label: 'Légitársaság', sortable: true},
                     {key: 'from', label: 'Honnan?', sortable: true},
@@ -118,7 +141,7 @@
             },
             open(id) {
                 this.deleteId = id;
-                this.$refs.modal.open()
+                this.$refs.modal.open();
             },
             deleteFlight(id) {
                 Api.deleteFlight(id).then((response) => {

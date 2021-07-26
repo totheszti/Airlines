@@ -1,12 +1,6 @@
 <template>
     <div>
         <div class="m-5 w-100 mx-auto d-flex justify-content-center">
-            <router-link to="/city" class="text-decoration-none">
-            <b-button variant="secondary"
-                      size="md" class="py-3 mx-1">
-                Városok
-            </b-button>
-            </router-link>
             <router-link to="/airline" class="text-decoration-none">
             <b-button variant="secondary"
                       size="md" class="py-3 mx-1">
@@ -18,6 +12,12 @@
                       size="md" class="py-3 mx-1">
                 Repülőjáratok
             </b-button>
+        </router-link>
+            <router-link to="/flight/shortest" class="text-decoration-none">
+                <b-button variant="secondary"
+                          size="md" class="py-3 mx-1">
+                    Útvonaltervezés
+                </b-button>
             </router-link>
         </div>
         <div class="container mx-auto h-auto">
@@ -44,7 +44,7 @@
                         </b-button>
                     </router-link>
 
-                    <b-button v-b-tooltip.hover title="Törlés" variant="danger" class="mb-2" size="sm" @click="deleteCity(row.item.id)">
+                    <b-button v-b-tooltip.hover title="Törlés" variant="danger" class="mb-2" size="sm" @click="openModal(row.item.id)">
                         <b-icon icon="trash" aria-hidden="true"></b-icon>
                     </b-button>
                     <sweet-modal ref="modal" title="Biztos, hogy törölni szeretnéd a várost?" class="my-auto">
@@ -55,11 +55,15 @@
                 </template>
             </b-table>
 
+            <b-form-select v-model="selectedPerPage" :options="perPage">
+
+            </b-form-select>
+
             <b-pagination
                     id="pagination"
                     v-model="currentPage"
                     :total-rows="rows"
-                    :per-page="perPage"
+                    :per-page="selectedPerPage"
                     aria-controls="my-table"
                     class="justify-content-center"
             ></b-pagination>
@@ -81,7 +85,8 @@
             return {
                 deleteId: '',
                 testNumber: 3,
-                perPage: 5,
+                selectedPerPage: null,
+                perPage: [5, 10, 20] ,
                 currentPage: 1,
                 fields: [{key: 'name', label: 'Város neve', sortable: true},
                     {key: 'population', label: 'Lakosság', sortable: true},
@@ -120,7 +125,7 @@
 
                 });
             },
-            open(id) {
+            openModal(id) {
                 this.deleteId = id;
                 this.$refs.modal.open()
             },

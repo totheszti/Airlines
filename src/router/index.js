@@ -40,6 +40,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "flightEdit" */ '../views/FlightEdit')
     },
     {
+        path: '/flight/shortest',
+        name: 'shortestPath',
+        component: () => import(/* webpackChunkName: "shortestPath" */ '../views/ShortestPath')
+    },
+    {
         path: '*',
         name: 'NotFound',
         component: () => import(/* webpackChunkName: "notFound" */ '../views/NotFound')
