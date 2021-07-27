@@ -99,6 +99,8 @@
                                     dismissible: true
                                 });
                             }
+
+                            this.$router.push({name: 'city' })
                         });
                 } else {
                     Api.saveCity(data).then(response => {
@@ -119,6 +121,7 @@
                                 dismissible: true
                             });
                         }
+                        this.$router.push({name: 'city' })
                     });
                 }
             },

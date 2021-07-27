@@ -37,14 +37,14 @@
             </div>
 
             <div>
-                <b-row class="my-1">
-                    <b-col sm="1" class="mt-3">
-                        <label for="airline" class="custom-required font-weight-bold">Légitársaság:</label>
-                    </b-col>
-                    <b-col sm="4" class="mt-3">
-                        <b-form-select name="airline" id="airline" v-model="flight.airline" :options="airlineSelect"></b-form-select>
-                    </b-col>
-                </b-row>
+<!--                <b-row class="my-1">-->
+<!--                    <b-col sm="1" class="mt-3">-->
+<!--                        <label for="airline" class="custom-required font-weight-bold">Légitársaság:</label>-->
+<!--                    </b-col>-->
+<!--                    <b-col sm="4" class="mt-3">-->
+<!--                        <b-form-select name="airline" id="airline" v-model="flight.airline" :options="airlineSelect"></b-form-select>-->
+<!--                    </b-col>-->
+<!--                </b-row>-->
 
                 <b-row class="my-1">
                     <b-col sm="1" class="mt-3">
@@ -70,8 +70,8 @@
                     </b-col>
                 </b-row>
 
-                <p v-if="selectionResult !== null && selectionResult < 100000000000000">Eredmény: {{selectionResult}} km {{selectionTimeResult}} perc</p>
-                <p v-if="selectionResult > 100000000000000">Ez az útvonal nem választható</p>
+                <h4 v-if="selectionResult !== null && selectionResult < 100000000000000" class="mt-5">Eredmény: <b>{{selectionResult}}</b> km <b>{{selectionTimeResult}}</b> perc</h4>
+                <h4 v-if="selectionResult > 100000000000000" class="mt-5">Ez az útvonal nem választható</h4>
             </div>
         </b-container>
     </div>

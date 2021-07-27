@@ -55,7 +55,7 @@
 
                     <sweet-modal ref="modal" title="Biztos, hogy törölni szeretnéd a légitársaságot?" class="my-auto">
                         A törölt elemet nem lehet visszaállítani!
-                        <b-button class="mr-2" @close="close(row.item.id)">Mégse</b-button>
+                        <b-button class="mr-2" @click="closeModal(row.item.id)">Mégse</b-button>
                         <b-button variant="danger" @click="deleteAirline(deleteId)">Törlés</b-button></sweet-modal>
 
                 </template>
@@ -94,7 +94,7 @@
         },
         data() {
             return {
-                itemPerPage: 5,
+                itemPerPage: 20,
                 deleteId: '',
                 perPageOptions: [
                     { value: 5, text: '5' },
@@ -140,6 +140,10 @@
             open(id) {
                 this.deleteId = id;
                 this.$refs.modal.open()
+            },
+            closeModal(id) {
+                this.deleteId = id;
+                this.$refs.modal.close()
             },
             deleteAirline(id) {
                 Api.deleteAirline(id).then((response) => {

@@ -67,8 +67,17 @@
                                 duration: 5000,
                                 dismissible: true
                             });
-
                         }
+                        else {
+                            this.$toast.open({
+                                message: "Módosítás sikertelen",
+                                type: "error",
+                                duration: 5000,
+                                dismissible: true
+                            });
+                        }
+
+                            this.$router.push({name: 'Airline' })
                     });
                 } else {
                     Api.saveAirline(data).then(response => {
@@ -81,6 +90,16 @@
                             });
 
                         }
+                        else {
+                            this.$toast.open({
+                                message: "Mentés sikertelen",
+                                type: "error",
+                                duration: 5000,
+                                dismissible: true
+                            });
+                        }
+
+                        this.$router.push({name: 'Airline' })
                     });
                 }
             },

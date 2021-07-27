@@ -110,8 +110,16 @@
                                 duration: 5000,
                                 dismissible: true
                             });
-
                         }
+                        else {
+                            this.$toast.open({
+                                message: "Mentés sikertelen",
+                                type: "error",
+                                duration: 5000,
+                                dismissible: true
+                            });
+                        }
+                        this.$router.push({name: 'Flight' })
                     });
                 } else {
                     Api.updateFlight(data)
@@ -125,7 +133,17 @@
                                 });
 
                             }
+                            else {
+                                this.$toast.open({
+                                    message: "Módosítás sikertelen",
+                                    type: "error",
+                                    duration: 5000,
+                                    dismissible: true
+                                });
+                            }
+                            this.$router.push({name: 'Flight' })
                         });
+
                 }
             },
             getAllAirlineAndCityOption() {

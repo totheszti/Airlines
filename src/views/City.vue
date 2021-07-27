@@ -98,7 +98,7 @@
         },
         data() {
             return {
-                itemPerPage: 5,
+                itemPerPage: 20,
                 deleteId: '',
                 testNumber: 3,
                 perPageOptions: [
