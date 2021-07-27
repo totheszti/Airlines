@@ -10,9 +10,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '../views/Home')
     },
     {
+        path: '/routePlanning',
+        name: 'RoutePlanning',
+        component: () => import(/* webpackChunkName: "routePlanning" */ '../views/Home')
+    },
+    {
         path: '/city',
-        name: 'City',
-        component: () => import(/* webpackChunkName: "city" */ '../views/Home')
+        name: 'city',
+        component: () => import(/* webpackChunkName: "city" */ '../views/City')
     },
     {
         path: '/city/edit',
@@ -38,11 +43,6 @@ const routes = [
         path: '/flight/edit',
         name: 'flightEdit',
         component: () => import(/* webpackChunkName: "flightEdit" */ '../views/FlightEdit')
-    },
-    {
-        path: '/flight/shortest',
-        name: 'shortestPath',
-        component: () => import(/* webpackChunkName: "shortestPath" */ '../views/ShortestPath')
     },
     {
         path: '*',

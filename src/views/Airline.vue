@@ -18,7 +18,7 @@
                             Repülőjáratok
                         </b-button>
                     </router-link>
-                    <router-link to="/flight/shortest" class="text-decoration-none">
+                    <router-link to="/" class="text-decoration-none">
                         <b-button variant="secondary"
                                   size="md" class="py-3 mx-1">
                             Útvonaltervezés
@@ -37,7 +37,7 @@
                      id="my-table"
                      :items="items"
                      :fields="fields"
-                     :per-page="perPage"
+                     :per-page="itemPerPage"
                      :current-page="currentPage"
                      class="text-center"
             >
@@ -61,16 +61,23 @@
                 </template>
             </b-table>
 
-            <b-form-select v-model="selectedPerPage" :options="perPage"></b-form-select>
-
-
-<!--            <b-pagination-->
-<!--                    id="pagination"-->
-<!--                    v-model="currentPage"-->
-<!--                    :total-rows="rows"-->
-<!--                    :per-page="selectedPerPage"-->
-<!--                    class="justify-content-center"-->
-<!--            ></b-pagination>-->
+            <b-row align-v="center" class="mb-5">
+                <b-col cols="2" md="6" lg="3" order="2" order-md="1" order-lg="1">
+                    <b-row align-v="center" class="mb-3 mb-lg-0" v-if="perPageOptions">
+                        <b-col>Oldalanként</b-col>
+                        <b-col>
+                            <b-form-select v-model="itemPerPage"
+                                           :options="perPageOptions"/>
+                        </b-col>
+                    </b-row>
+                </b-col>
+                <b-col cols="9" order="1" order-md="3" order-lg="2" class="text-center">
+                    <b-pagination v-model="currentPage"
+                                  :total-rows="items.length"
+                                  :per-page="itemPerPage"
+                                  align="center"/>
+                </b-col>
+            </b-row>
 
         </div>
     </div>
@@ -87,9 +94,13 @@
         },
         data() {
             return {
-                selectedPerPage: null,
+                itemPerPage: 5,
                 deleteId: '',
-                perPage: [2, 5, 10],
+                perPageOptions: [
+                    { value: 5, text: '5' },
+                    { value: 10, text: '10' },
+                    { value: 20, text: '20' },
+                ],
                 currentPage: 1,
                 fields: [{key: 'name', label: 'Város neve', sortable: true},
                     {key: 'actions', label: 'Műveletek'},

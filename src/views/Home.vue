@@ -1,183 +1,243 @@
 <template>
-    <div>
-        <div class="m-5 w-100 mx-auto d-flex justify-content-center">
-            <router-link to="/airline" class="text-decoration-none">
-            <b-button variant="secondary"
-                      size="md" class="py-3 mx-1">
-                Légitársaságok
-            </b-button>
-            </router-link>
-            <router-link to="/flight" class="text-decoration-none">
-            <b-button variant="secondary"
-                      size="md" class="py-3 mx-1">
-                Repülőjáratok
-            </b-button>
-        </router-link>
-            <router-link to="/flight/shortest" class="text-decoration-none">
-                <b-button variant="secondary"
-                          size="md" class="py-3 mx-1">
-                    Útvonaltervezés
-                </b-button>
-            </router-link>
-        </div>
-        <div class="container mx-auto h-auto">
-            <h1 class="mb-5 mt-5">Városok</h1>
-            <div class="w-100">
-                <div class="p-0 my-3 float-right">
-                    <router-link to="/city/edit" class="text-decoration-none">
-                        <b-button block type="submit" variant="success" class="btn-new"><b-icon icon="plus" class="mr-2"/>Új város hozzáadása</b-button>
-                    </router-link></div>
-            </div>
-            <b-table striped responsive="sm"
-                     id="my-table"
-                     :items="items"
-                     :fields="fields"
-                     :per-page="perPage"
-                     :current-page="currentPage"
-                     class="text-center"
-            >
-                <template v-slot:cell(actions)="row">
-                    <router-link :to="{name:'cityEdit', params:{id:row.item.id}}">
-                        <b-button v-b-tooltip.hover title="Szerkesztés" variant="primary" size="sm"
-                                  class="mx-2 mb-2">
-                            <b-icon icon="pencil"></b-icon>
-                        </b-button>
-                    </router-link>
-
-                    <b-button v-b-tooltip.hover title="Törlés" variant="danger" class="mb-2" size="sm" @click="openModal(row.item.id)">
-                        <b-icon icon="trash" aria-hidden="true"></b-icon>
+    <div class="container mx-auto">
+        <div class="d-flex">
+<!--            <router-link v-b-tooltip.hover title="Vissza" to="/">-->
+<!--                <b-icon icon="arrow-left-circle-fill" class="mt-5 mx-auto backColor"></b-icon>-->
+<!--            </router-link>-->
+            <div class="m-5 w-100 mx-auto d-flex justify-content-center">
+                <router-link to="/city" class="text-decoration-none">
+                    <b-button variant="secondary"
+                              size="md" class="py-3 mx-1">
+                        Városok
                     </b-button>
-                    <sweet-modal ref="modal" title="Biztos, hogy törölni szeretnéd a várost?" class="my-auto">
-                        A törölt elemet nem lehet visszaállítani!
-                        <b-button class="mr-2" @click="closeModal(row.item.id)">Mégse</b-button>
-                        <b-button variant="danger" @click="deleteCity(deleteId)">Törlés</b-button></sweet-modal>
-
-                </template>
-            </b-table>
-
-            <b-row align-v="center" class="mb-5">
-                <b-col cols="6" md="6" lg="3" order="2" order-md="1" order-lg="1">
-                    <b-row align-v="center" class="mb-3 mb-lg-0" v-if="perPageOptions">
-                        <b-col>Oldalanként</b-col>
-                        <b-col>
-                            <b-form-select v-model="itemPerPage"
-                                           :options="perPageOptions"
-                                           @change="perPageChanged"/>
-                        </b-col>
-                    </b-row>
-                </b-col>
-                <b-col order="1" order-md="3" order-lg="2" class="text-center">
-                    <b-pagination v-model="currentPage"
-                                  :total-rows="rows"
-                                  :per-page="itemPerPage"
-                                  align="center"/>
-                </b-col>
-            </b-row>
-
+                </router-link>
+                <router-link to="/airline" class="text-decoration-none">
+                    <b-button variant="secondary"
+                              size="md" class="py-3 mx-1">
+                        Légitársaságok
+                    </b-button>
+                </router-link>
+                <router-link to="/flight" class="text-decoration-none">
+                    <b-button variant="secondary"
+                              size="md" class="py-3 mx-1">
+                        Repülőjáratok
+                    </b-button>
+                </router-link>
+            </div>
         </div>
+        <h1 class="mb-5 mt-5 mx-2 col-9">Útvonaltervezés</h1>
+        <b-container fluid class="w-100">
+
+            <div class="border border-success p-3 w-50 float-right">
+                <p>Legkisebb lakosságú város: <b>{{smallestCity}}</b></p>
+                <p>Legnagyobb lakosságú város: <b>{{biggestCity}}</b></p>
+
+                <p>Legkisebb távolság a két város között: <b>{{shortestPath}} km</b></p>
+
+            </div>
+
+            <div>
+                <b-row class="my-1">
+                    <b-col sm="1" class="mt-3">
+                        <label for="airline" class="custom-required font-weight-bold">Légitársaság:</label>
+                    </b-col>
+                    <b-col sm="4" class="mt-3">
+                        <b-form-select name="airline" id="airline" v-model="flight.airline" :options="airlineSelect"></b-form-select>
+                    </b-col>
+                </b-row>
+
+                <b-row class="my-1">
+                    <b-col sm="1" class="mt-3">
+                        <label for="from" class="custom-required font-weight-bold">Honnan?</label>
+                    </b-col>
+                    <b-col sm="4" class="mt-3">
+                        <b-form-select name="from" id="from" v-model="flight.from" :options="citySelect"></b-form-select>
+                    </b-col>
+                </b-row>
+
+                <b-row class="my-1">
+                    <b-col sm="1" class="mt-3">
+                        <label for="to" class="custom-required font-weight-bold">Hova?</label>
+                    </b-col>
+                    <b-col sm="4" class="mt-3">
+                        <b-form-select name="to" id="to" v-model="flight.to" :options="citySelect"></b-form-select>
+                    </b-col>
+                </b-row>
+
+                <b-row class="my-1">
+                    <b-col sm="4" class="mt-3">
+                        <b-button id="result" variant="success" @click="getFlightsByData(flight)">Lekérdezés</b-button>
+                    </b-col>
+                </b-row>
+
+                <p v-if="selectionResult !== null && selectionResult < 100000000000000">Eredmény: {{selectionResult}} km {{selectionTimeResult}} perc</p>
+                <p v-if="selectionResult > 100000000000000">Ez az útvonal nem választható</p>
+            </div>
+        </b-container>
     </div>
 </template>
 
 <script>
     import Api from "../api/Api";
-    import {SweetModal} from 'sweet-modal-vue';
+
+    const {GraphBuilder, DijkstraStrategy} = require('js-shortest-path');
 
     export default {
-        name: "Home",
-        components: {
-            SweetModal
-        },
+        name: "ShortestPath",
         data() {
             return {
-                itemPerPage: 0,
-                deleteId: '',
-                testNumber: 3,
-                perPageOptions: [
-                    { value: 2, text: '2' },
-                    { value: 5, text: '5' },
-                    { value: 10, text: '10' },
-                ],
-                perPage: 5,
-                currentPage: 1,
-                fields: [{key: 'name', label: 'Város neve', sortable: true},
-                    {key: 'population', label: 'Lakosság', sortable: true},
-                    {key: 'actions', label: 'Műveletek'},
-                ],
-                dataArrays: [],
-                params: {
-                    stripe: true,
-                    border: true,
-                    header: 'row',
-                    enableSearch: true,
-                    sort: []
-
-                }
-
-            }
-        },
-        computed: {
-            items() {
-                return this.dataArrays
-            },
-            rows() {
-                return this.items.length
+                selected: null,
+                errors: [],
+                graph: [],
+                flight: {
+                    id: '',
+                    airline: '',
+                    from: '',
+                    to: ''
+                },
+                cityDijkstra: [],
+                dijkstra: [],
+                dijkstraForSelection: [],
+                dijkstraForSelectionTime: [],
+                selectionResult: null,
+                selectionTimeResult: null,
+                highestPopulation: null,
+                lowestPopulation: null,
+                smallestCity: '',
+                biggestCity: '',
+                shortestPath: null,
+                airlineSelect: [],
+                citySelect: [],
+                flights: [],
+                flightsForSelection: []
             }
         },
         methods: {
-            getAllItems() {
+            getAllAirlineAndCityOption() {
+                Api.getAllAirline().then(resp => {
+                    for (let i = 0; i < resp.data.length; i++) {
+                        this.airlineSelect.push({
+                            text: resp.data[i].name,
+                            value: {
+                                id: resp.data[i].id,
+                                name: resp.data[i].name
+                            }
+                        });
+                    }
+                });
                 Api.getAllCity().then(resp => {
                     for (let i = 0; i < resp.data.length; i++) {
-                        this.dataArrays.push({
+                        this.citySelect.push({
+                            text: resp.data[i].name,
+                            value: {
+                                id: resp.data[i].id,
+                                name: resp.data[i].name,
+                                population: resp.data[i].population
+                            }
+                        });
+                    }
+                });
+            },
+            findTheShortestWay(){
+                Api.getAllCity().then(resp => {
+                    for (let i = 0; i < resp.data.length; i++) {
+                        this.cityDijkstra.push({
                             id: resp.data[i].id,
                             name: resp.data[i].name,
                             population: resp.data[i].population
                         });
+
+                        let lowest = Number.POSITIVE_INFINITY;
+                        let highest = Number.NEGATIVE_INFINITY;
+                        let temp;
+
+                        for( let i = resp.data.length - 1; i>=0; i--){
+                            temp = resp.data[i].population;
+                            if (temp < lowest) lowest = temp;
+                            if (temp > highest) highest = temp;
+                        }
+
+                        this.lowestPopulation = lowest;
+                        this.highestPopulation = highest;
+
                     }
+
+                    this.smallestCity = this.cityDijkstra.find( item => item.population === this.lowestPopulation).name;
+                    this.biggestCity = this.cityDijkstra.find( item => item.population === this.highestPopulation).name;
+
+                    Api.getAllFlight().then(resp => {
+                        let graph = new GraphBuilder();
+                        for(let i =0; i< resp.data.length; i++) {
+                            this.flights.push({
+                                start: resp.data[i].from.name,
+                                end: resp.data[i].to.name,
+                                airline: resp.data[i].airline.name,
+                                distance: resp.data[i].distance
+                            });
+
+                            graph = graph.edge(resp.data[i].from.name, resp.data[i].to.name, resp.data[i].distance);
+                        }
+                        this.dijkstra = DijkstraStrategy(graph.build());
+
+                        this.shortestPath = this.dijkstra.shortest(this.smallestCity, this.biggestCity).cost;
+                    });
 
                 });
             },
-            perPageChanged(perPage) {
-                this.itemPerPage = perPage;
-                this.getAllItems();
-            },
-            openModal(id) {
-                this.deleteId = id;
-                this.$refs.modal.open()
-            },
-            closeModal(id){
-                this.deleteId = id;
-                this.$refs.modal.close()
-            },
-            deleteCity(id) {
-                Api.deleteCity(id).then((response) => {
-                    if (response.status === 200){
-                        this.$toast.open({
-                            message: "Sikeres törlés",
-                            type: "success",
-                            duration: 5000,
-                            dismissible: true
+            getFlightsByData(data){
+                Api.getAllFlight().then(resp => {
+                    let graph = new GraphBuilder();
+                    let graph1 = new GraphBuilder();
+                    for(let i =0; i< resp.data.length; i++) {
+                        this.flightsForSelection.push({
+                            start: resp.data[i].from.name,
+                            end: resp.data[i].to.name,
+                            airline: resp.data[i].airline.name,
+                            distance: resp.data[i].distance,
+                            duration: resp.data[i].duration
                         });
-                        this.getAllItems();
-                    } else {
-                        this.$toast.open({
-                            message: "Sikertelen törlés",
-                            type: "error",
-                            duration: 5000,
-                            dismissible: true
-                        });
-                        this.getAllItems();
+
+                        graph = graph.edge(resp.data[i].from.name, resp.data[i].to.name, resp.data[i].distance);
+                        graph1 = graph1.edge(resp.data[i].from.name, resp.data[i].to.name, resp.data[i].duration);
                     }
+
+                    this.dijkstraForSelection = DijkstraStrategy(graph.build());
+                    this.dijkstraForSelectionTime = DijkstraStrategy(graph1.build());
+
+                    this.selectionResult = this.dijkstraForSelection.shortest(data.from.name, data.to.name).cost;
+                    this.selectionTimeResult = this.dijkstraForSelectionTime.shortest(data.from.name, data.to.name).cost;
+
                 });
-                this.$refs.modal.close();
-                this.getAllItems();
-                // window.location.reload()
-            },
+            }
         },
         created() {
-            this.getAllItems();
+            this.getAllAirlineAndCityOption();
+            this.findTheShortestWay();
         }
     }
 </script>
 
 <style scoped>
+    .container {
+        margin-left: 70px;
+    }
+
+    .w-30 {
+        max-width: 30%;
+    }
+
+    .backColor {
+        color: dodgerblue;
+    }
+
+    svg {
+        min-width: 50px;
+        min-height: 50px;
+    }
+
+    svg :hover {
+        color: #ffd718;
+        box-shadow: 3px 0px 0px 0px #000000 inset !important;
+    }
 </style>
+
