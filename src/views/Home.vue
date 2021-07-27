@@ -55,18 +55,24 @@
                 </template>
             </b-table>
 
-            <b-form-select v-model="selectedPerPage" :options="perPage">
-
-            </b-form-select>
-
-            <b-pagination
-                    id="pagination"
-                    v-model="currentPage"
-                    :total-rows="rows"
-                    :per-page="selectedPerPage"
-                    aria-controls="my-table"
-                    class="justify-content-center"
-            ></b-pagination>
+            <b-row align-v="center" class="mb-5">
+                <b-col cols="6" md="6" lg="3" order="2" order-md="1" order-lg="1">
+                    <b-row align-v="center" class="mb-3 mb-lg-0" v-if="perPageOptions">
+                        <b-col>Oldalanként</b-col>
+                        <b-col>
+                            <b-form-select v-model="itemPerPage"
+                                           :options="perPageOptions"
+                                           @change="perPageChanged"/>
+                        </b-col>
+                    </b-row>
+                </b-col>
+                <b-col order="1" order-md="3" order-lg="2" class="text-center">
+                    <b-pagination v-model="currentPage"
+                                  :total-rows="rows"
+                                  :per-page="itemPerPage"
+                                  align="center"/>
+                </b-col>
+            </b-row>
 
         </div>
     </div>
@@ -83,10 +89,15 @@
         },
         data() {
             return {
+                itemPerPage: 0,
                 deleteId: '',
                 testNumber: 3,
-                selectedPerPage: null,
-                perPage: [5, 10, 20] ,
+                perPageOptions: [
+                    { value: 2, text: '2' },
+                    { value: 5, text: '5' },
+                    { value: 10, text: '10' },
+                ],
+                perPage: 5,
                 currentPage: 1,
                 fields: [{key: 'name', label: 'Város neve', sortable: true},
                     {key: 'population', label: 'Lakosság', sortable: true},
@@ -124,6 +135,10 @@
                     }
 
                 });
+            },
+            perPageChanged(perPage) {
+                this.itemPerPage = perPage;
+                this.getAllItems();
             },
             openModal(id) {
                 this.deleteId = id;

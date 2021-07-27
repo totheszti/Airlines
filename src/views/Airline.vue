@@ -64,13 +64,13 @@
             <b-form-select v-model="selectedPerPage" :options="perPage"></b-form-select>
 
 
-            <b-pagination
-                    id="pagination"
-                    v-model="currentPage"
-                    :total-rows="rows"
-                    :per-page="selectedPerPage"
-                    class="justify-content-center"
-            ></b-pagination>
+<!--            <b-pagination-->
+<!--                    id="pagination"-->
+<!--                    v-model="currentPage"-->
+<!--                    :total-rows="rows"-->
+<!--                    :per-page="selectedPerPage"-->
+<!--                    class="justify-content-center"-->
+<!--            ></b-pagination>-->
 
         </div>
     </div>

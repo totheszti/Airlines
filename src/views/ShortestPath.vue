@@ -119,30 +119,26 @@
                         this.highestPopulation = highest;
 
                     }
-                    debugger
 
-                    this.smallestCity = this.citySelect.findIndex( item => item.population === this.lowestPopulation).name;
-                    this.biggestCity = this.citySelect.findIndex( item => item.population === this.highestPopulation).name;
+                    this.smallestCity = this.citySelect.find( item => item.population === this.lowestPopulation).name;
+                    this.biggestCity = this.citySelect.find( item => item.population === this.highestPopulation).name;
 
                     Api.getAllFlight().then(resp => {
-
+                        let graph = new GraphBuilder();
                         for(let i =0; i< resp.data.length; i++) {
-                            this.flights.push({
-                                start: resp.data[i].from.name,
-                                end: resp.data[i].to.name,
-                                airline: resp.data[i].airline.name,
-                                distance: resp.data[i].distance
-                            });
+                            // this.flights.push({
+                            //     start: resp.data[i].from.name,
+                            //     end: resp.data[i].to.name,
+                            //     airline: resp.data[i].airline.name,
+                            //     distance: resp.data[i].distance
+                            // });
 
-                            const graph = GraphBuilder()
-                                .edge(resp.data[i].from.name, resp.data[i].to.name, resp.data[i].distance)
-                                .build();
-
-                            const dijkstra = DijkstraStrategy(graph);
-
-                            //Prints the shortest path from S to C
-                            console.log(dijkstra.shortest(this.smallestCity, this.biggestCity));
+                            graph = graph.edge(resp.data[i].from.name, resp.data[i].to.name, resp.data[i].distance);
                         }
+                        const dijkstra = DijkstraStrategy(graph.build());
+
+                        //Prints the shortest path from S to C
+                        console.log(dijkstra.shortest(this.smallestCity, this.biggestCity));
                     });
 
                 });
