@@ -1,4 +1,16 @@
-# airlines
+# Airlines
+
+## Important steps before use
+Install CORS
+```
+npm install cors
+``` 
+On backend ( innobyte-frontend-feladat)  - Go to 'index.js' file and write these rows to the right place
+```
+import cors from 'cors';
+
+app.use(cors());
+```
 
 ## Project setup
 ```
@@ -17,3 +29,4 @@ yarn build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
